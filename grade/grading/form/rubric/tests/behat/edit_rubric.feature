@@ -22,6 +22,8 @@ Feature: Rubrics can be created and edited
     And I add a "Assignment" to section "1" and I fill the form with:
       | Assignment name | Test assignment 1 name |
       | Description | Test assignment description |
+      | grade[gradeconfig_type] | Point |
+      | Maximum grade | 100 |
       | Grading method | Rubric |
     When I go to "Test assignment 1 name" advanced grading definition page
     # Defining a rubric.
