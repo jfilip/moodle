@@ -109,3 +109,37 @@ Feature: We can change the grading type and maximum grade point values
     And I press "Save and display"
     Then I should see "Invalid Grade Value. This must be an integer between 0 and 100"
     And I press "Cancel"
+
+  @new1
+  Scenario: Create an activity with a valid maximum grade point, change the system maximum to be lower, backup and restore the course
+    When I navigate to "General settings" node in "Site administration > Grades"
+    And I set the following fields to these values:
+      | Grade point maximum | 1000 |
+    And I press "Save changes"
+    And I follow "Home"
+    And I follow "Course 1"
+    And I follow "Test Assignment 1"
+    And I follow "Edit settings"
+    And I expand all fieldsets
+    And I set the field "grade[gradeconfig_type]" to "point"
+    And I set the field "grade[gradeconfig_point]" to "1000"
+    And I press "Save and display"
+    And I backup "Course 1" course using this options:
+      | Filename | test_backup.mbz |
+    And I navigate to "General settings" node in "Site administration > Grades"
+    And I set the following fields to these values:
+      | Grade point maximum | 100 |
+    And I press "Save changes"
+    And I follow "Home"
+    And I follow "Course 1"
+    And I navigate to "Restore" node in "Course administration"
+    And I restore "test_backup.mbz" backup into a new course using this options:
+      | Course name | Course 1 restored in a new course |
+      | Course short name | C1a |
+    Then I should see "Course 1 restored in a new course"
+    And I follow "Test Assignment 1"
+    And I follow "Edit settings"
+    And the field "grade[gradeconfig_point]" matches value "1000"
+    And I press "Save and display"
+    Then I should see "Invalid Grade Value. This must be an integer between 0 and 100"
+    And I press "Cancel"
